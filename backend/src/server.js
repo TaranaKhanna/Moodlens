@@ -1,7 +1,21 @@
-import app from "./app.js";
+import express from "express";
+import cors from "cors";
+import dotenv from "dotenv";
 
-const port = process.env.PORT || 8000;
+import emotionRoutes from "./routes/emotionRoutes.js";
 
-app.listen(port, () => {
-    console.log(`Server running on port ${port}`);
+dotenv.config();
+
+const app = express();
+
+app.use(cors());
+
+app.use(express.json());
+
+app.use("/api/emotion", emotionRoutes);
+
+const PORT = process.env.PORT || 8000;
+
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });
