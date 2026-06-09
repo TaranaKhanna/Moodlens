@@ -13,6 +13,7 @@ function App() {
   const [loading, setLoading] = useState(false);
 
   const [result, setResult] = useState(null);
+  const [error, setError] = useState("");
 
   return (
     <div className="bg-[#020817] min-h-screen overflow-x-hidden">
@@ -33,25 +34,19 @@ function App() {
               loading={loading}
               setLoading={setLoading}
               setResult={setResult}
+              setError={setError}
             />
             <ResultCard
               selectedImage={selectedImage}
               loading={loading}
               result={result}
+              error={error}
             />
           </div>
 
-          {/* Bottom Section */}
-          <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 mt-6 items-stretch">
-            {/* Weekly Trends */}
-            <div className="xl:col-span-1">
-              <WeeklyTrend />
-            </div>
-
-            {/* Recent Analyses */}
-            <div className="xl:col-span-2">
-              <RecentAnalyses />
-            </div>
+          {/* bottom section */}
+          <div className="p-4 md:p-8">
+            <RecentAnalyses />
           </div>
 
         </div>
