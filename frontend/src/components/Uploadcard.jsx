@@ -1,4 +1,5 @@
 import { useRef, useState } from "react";
+import { analyzeEmotionAPI } from "../api/emotionApi";
 
 import {
   UploadCloud,
@@ -12,6 +13,7 @@ const UploadCard = ({
   loading,
   setLoading,
   setResult,
+  setError
 }) => {
 
   const fileInputRef = useRef();
@@ -41,8 +43,44 @@ const UploadCard = ({
   };
 
   // Remove Image
+  // const removeImage = () => {
+  //   setSelectedImage(null);
+  // };
   const removeImage = () => {
     setSelectedImage(null);
+
+    setResult(null);
+
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+  };
+
+  // backend call
+  const handleAnalyze = async () => {
+    if (!selectedImage) return;
+
+    try {
+      setLoading(true);
+
+      const data =
+        await analyzeEmotionAPI(
+          selectedImage
+        );
+
+      setResult(data.result);
+    } catch (error) {
+      console.log(error);
+
+      setResult(null);
+
+      setError(
+        error.response?.data?.message ||
+        "Emotion detection failed"
+      );
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -132,7 +170,8 @@ const UploadCard = ({
 
       {/* Analyze Button */}
       <button
-        disabled={!selectedImage}
+        onClick={handleAnalyze}
+        disabled={!selectedImage || loading}
         className={`mt-6 w-full py-4 rounded-2xl font-medium transition-all ${selectedImage
           ? "bg-[#5B8CFF] hover:bg-[#79A2FF] text-black"
           : "bg-white/10 text-gray-500 cursor-not-allowed"

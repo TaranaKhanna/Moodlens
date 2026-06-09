@@ -4,6 +4,7 @@ const ResultCard = ({
   selectedImage,
   loading,
   result,
+  error,
 }) => {
   return (
     <div className="bg-[#081028] border border-white/10 rounded-3xl p-6 md:p-8">
@@ -25,27 +26,32 @@ const ResultCard = ({
       </div>
 
       {/* Result Body */}
-      <div className="flex flex-col items-center justify-center h-[420px] bg-[#0B122B] rounded-3xl border border-white/5 p-6">
+      <div className="flex flex-col items-center justify-center min-h-[420px] bg-[#0B122B] rounded-3xl border border-white/5 p-6">
+        
         {/* EMPTY STATE */}
-        {!selectedImage && !loading && !result && (
-          <>
-            <div className="w-24 h-24 rounded-full bg-white/5 flex items-center justify-center mb-6">
-              <Smile
-                size={42}
-                className="text-gray-500"
-              />
-            </div>
+        {!selectedImage &&
+          !loading &&
+          !result &&
+          !error && (
+            <>
+              <div className="w-24 h-24 rounded-full bg-white/5 flex items-center justify-center mb-6">
+                <Smile
+                  size={42}
+                  className="text-gray-500"
+                />
+              </div>
 
-            <h3 className="text-white text-2xl font-semibold mb-3 text-center">
-              No Analysis Yet
-            </h3>
+              <h3 className="text-white text-2xl font-semibold mb-3 text-center">
+                No Analysis Yet
+              </h3>
 
-            <p className="text-gray-400 text-center max-w-[300px]">
-              Upload an image and click analyze
-              to detect facial emotion.
-            </p>
-          </>
-        )}
+              <p className="text-gray-400 text-center max-w-[300px]">
+                Upload an image and click
+                analyze to detect facial
+                emotion.
+              </p>
+            </>
+          )}
 
         {/* LOADING STATE */}
         {loading && (
@@ -65,16 +71,35 @@ const ResultCard = ({
           </>
         )}
 
+        {/* ERROR STATE */}
+        {!loading && error && (
+          <>
+            <div className="w-24 h-24 rounded-full bg-red-500/10 flex items-center justify-center mb-6">
+              <span className="text-5xl">
+                ⚠️
+              </span>
+            </div>
+
+            <h3 className="text-red-400 text-2xl font-semibold mb-3 text-center">
+              Analysis Failed
+            </h3>
+
+            <p className="text-gray-400 text-center max-w-[320px] leading-relaxed">
+              {error}
+            </p>
+          </>
+        )}
+
         {/* RESULT STATE */}
-        {!loading && result && (
+        {!loading && result && !error && (
           <>
             {/* Emoji */}
             <div className="text-7xl mb-5">
               {result.emoji}
             </div>
 
-            {/* Emotion */}
-            <h2 className="text-white text-4xl font-bold mb-3">
+            {/* Main Emotion */}
+            <h2 className="text-white text-4xl font-bold mb-3 text-center">
               {result.emotion}
             </h2>
 
@@ -82,52 +107,47 @@ const ResultCard = ({
               Confidence Score
             </p>
 
-            {/* Progress */}
-            <div className="w-full max-w-[300px] bg-white/10 h-4 rounded-full overflow-hidden">
+            {/* Progress Bar */}
+            <div className="w-full max-w-[320px] bg-white/10 h-4 rounded-full overflow-hidden">
               <div
                 style={{
                   width: `${result.confidence}%`,
                 }}
-                className="h-full bg-[#22C55E] rounded-full transition-all duration-500"
+                className="h-full bg-[#22C55E] rounded-full transition-all duration-700"
               />
             </div>
 
-            <span className="text-[#22C55E] text-xl font-semibold mt-4">
+            {/* Confidence */}
+            <span className="text-[#22C55E] text-2xl font-semibold mt-4">
               {result.confidence}%
             </span>
 
-            {/* Stats */}
-            <div className="grid grid-cols-3 gap-4 mt-10 w-full max-w-[400px] px-4">
-              <div className="bg-white/5 rounded-2xl p-4 text-center">
-                <p className="text-gray-400 text-sm mb-1">
-                  Neutral
-                </p>
+            {/* Emotion Stats */}
+            {result.emotions && (
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mt-10 w-full max-w-[500px]">
+                {Object.entries(
+                  result.emotions
+                )
+                  .sort(
+                    (a, b) => b[1] - a[1]
+                  )
+                  .slice(0, 6)
+                  .map(([key, value]) => (
+                    <div
+                      key={key}
+                      className="bg-white/5 rounded-2xl p-4 text-center border border-white/5"
+                    >
+                      <p className="text-gray-400 text-sm mb-2 capitalize">
+                        {key}
+                      </p>
 
-                <h4 className="text-white font-semibold">
-                  10%
-                </h4>
+                      <h4 className="text-white text-lg font-semibold">
+                        {Math.round(value)}%
+                      </h4>
+                    </div>
+                  ))}
               </div>
-
-              <div className="bg-white/5 rounded-2xl p-4 text-center">
-                <p className="text-gray-400 text-sm mb-1">
-                  Sad
-                </p>
-
-                <h4 className="text-white font-semibold">
-                  3%
-                </h4>
-              </div>
-
-              <div className="bg-white/5 rounded-2xl p-4 text-center">
-                <p className="text-gray-400 text-sm mb-1">
-                  Angry
-                </p>
-
-                <h4 className="text-white font-semibold">
-                  2%
-                </h4>
-              </div>
-            </div>
+            )}
           </>
         )}
       </div>
