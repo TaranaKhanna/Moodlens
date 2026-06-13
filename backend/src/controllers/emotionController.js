@@ -12,18 +12,14 @@ export const analyzeEmotion = async (
         message: "No image uploaded",
       });
     }
-// console.log("hi1");
-    // Detect emotion using Face++
+
     const result = await detectEmotion(
       req.file.path
     );
-    // console.log("hi2");
 
-    // Extract emotion and confidence
     const emotion = result.emotion;
     const confidence = result.confidence;
 
-    // Save analysis to MongoDB
     const savedAnalysis =
       await Analysis.create({
         imageUrl: `/uploads/${req.file.filename}`,

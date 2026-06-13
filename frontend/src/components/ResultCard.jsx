@@ -8,7 +8,6 @@ const ResultCard = ({
 }) => {
   return (
     <div className="bg-[#081028] border border-white/10 rounded-3xl p-6 md:p-8">
-      {/* Header */}
       <div className="flex items-center gap-3 mb-8">
         <div className="w-11 h-11 rounded-2xl bg-[#22C55E]/10 flex items-center justify-center">
           <Smile className="text-[#22C55E]" />
@@ -25,10 +24,8 @@ const ResultCard = ({
         </div>
       </div>
 
-      {/* Result Body */}
       <div className="flex flex-col items-center justify-center min-h-[420px] bg-[#0B122B] rounded-3xl border border-white/5 p-6">
-        
-        {/* EMPTY STATE */}
+
         {!selectedImage &&
           !loading &&
           !result &&
@@ -53,7 +50,6 @@ const ResultCard = ({
             </>
           )}
 
-        {/* LOADING STATE */}
         {loading && (
           <>
             <Loader2
@@ -71,7 +67,6 @@ const ResultCard = ({
           </>
         )}
 
-        {/* ERROR STATE */}
         {!loading && error && (
           <>
             <div className="w-24 h-24 rounded-full bg-red-500/10 flex items-center justify-center mb-6">
@@ -90,15 +85,12 @@ const ResultCard = ({
           </>
         )}
 
-        {/* RESULT STATE */}
         {!loading && result && !error && (
           <>
-            {/* Emoji */}
             <div className="text-7xl mb-5">
               {result.emoji}
             </div>
 
-            {/* Main Emotion */}
             <h2 className="text-white text-4xl font-bold mb-3 text-center">
               {result.emotion}
             </h2>
@@ -107,7 +99,6 @@ const ResultCard = ({
               Confidence Score
             </p>
 
-            {/* Progress Bar */}
             <div className="w-full max-w-[320px] bg-white/10 h-4 rounded-full overflow-hidden">
               <div
                 style={{
@@ -117,12 +108,10 @@ const ResultCard = ({
               />
             </div>
 
-            {/* Confidence */}
             <span className="text-[#22C55E] text-2xl font-semibold mt-4">
               {result.confidence}%
             </span>
 
-            {/* Emotion Stats */}
             {result.emotions && (
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mt-10 w-full max-w-[500px]">
                 {Object.entries(

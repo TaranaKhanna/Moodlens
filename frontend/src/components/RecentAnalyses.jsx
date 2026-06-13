@@ -7,7 +7,7 @@ const getEmotionColor = (
   emotion
 ) => {
   switch (
-    emotion?.toLowerCase()
+  emotion?.toLowerCase()
   ) {
     case "happiness":
       return "bg-yellow-500/20 text-yellow-400";
@@ -61,7 +61,6 @@ const RecentAnalyses = () => {
 
   return (
     <div className="bg-[#081028] border border-white/10 rounded-3xl p-6 md:p-8 h-full">
-      {/* Header */}
       <div className="flex items-center justify-between mb-8">
         <div className="flex items-center gap-3">
           <div className="w-11 h-11 rounded-2xl bg-[#5B8CFF]/10 flex items-center justify-center">
@@ -80,14 +79,12 @@ const RecentAnalyses = () => {
         </div>
       </div>
 
-      {/* Loading */}
       {loading && (
         <p className="text-gray-400">
           Loading analyses...
         </p>
       )}
 
-      {/* Empty State */}
       {!loading &&
         analyses.length === 0 && (
           <p className="text-center text-gray-400 py-10">
@@ -95,7 +92,6 @@ const RecentAnalyses = () => {
           </p>
         )}
 
-      {/* Mobile Cards */}
       {!loading && (
         <div className="flex flex-col gap-4 md:hidden">
           {analyses.map((item) => (
@@ -137,7 +133,6 @@ const RecentAnalyses = () => {
         </div>
       )}
 
-      {/* Desktop Table */}
       {!loading && (
         <div className="hidden md:block overflow-x-auto">
           <table className="w-full">
