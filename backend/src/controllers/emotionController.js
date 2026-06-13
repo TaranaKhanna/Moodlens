@@ -1,5 +1,13 @@
 import { detectEmotion } from "../services/emotionService.js";
 import Analysis from "../models/Analysis.js";
+import {
+  createAnalysisError,
+  getAnalysisErrorResponse,
+} from "../utils/analysisErrors.js";
+import {
+  deleteUploadedFile,
+  pruneOldAnalyses,
+} from "../utils/storageCleanup.js";
 
 export const analyzeEmotion = async (
   req,
@@ -7,10 +15,17 @@ export const analyzeEmotion = async (
 ) => {
   try {
     if (!req.file) {
-      return res.status(400).json({
-        success: false,
-        message: "No image uploaded",
-      });
+      const errorResponse =
+        getAnalysisErrorResponse(
+          createAnalysisError(
+            "UNSUPPORTED_IMAGE",
+            400
+          )
+        );
+
+      return res
+        .status(errorResponse.status)
+        .json(errorResponse.body);
     }
 
     const result = await detectEmotion(
@@ -28,19 +43,35 @@ export const analyzeEmotion = async (
         emotions: result.emotions,
       });
 
+    try {
+      await pruneOldAnalyses();
+    } catch (cleanupError) {
+      console.error(
+        "Failed to prune old analyses:",
+        cleanupError
+      );
+    }
+
     res.status(200).json({
       success: true,
       result,
       analysis: savedAnalysis,
     });
   } catch (error) {
-    console.log(error);
+    try {
+      await deleteUploadedFile(req.file?.path);
+    } catch (cleanupError) {
+      console.error(
+        "Failed to delete failed upload:",
+        cleanupError
+      );
+    }
 
-    res.status(500).json({
-      success: false,
-      message:
-        error.message ||
-        "Emotion detection failed",
-    });
+    const errorResponse =
+      getAnalysisErrorResponse(error);
+
+    res
+      .status(errorResponse.status)
+      .json(errorResponse.body);
   }
 };

@@ -2,6 +2,7 @@ import { useRef, useState } from "react";
 import { analyzeEmotionAPI } from "../api/emotionApi";
 
 import {
+  AlertCircle,
   UploadCloud,
   ImageIcon,
   X,
@@ -17,22 +18,50 @@ const UploadCard = ({
 }) => {
 
   const fileInputRef = useRef();
+  const analyzeRequestRef = useRef(0);
+  const [uploadError, setUploadError] =
+    useState("");
+
+  const getAnalyzeErrorMessage = (error) => {
+    const apiMessage =
+      error.response?.data?.message;
+
+    if (apiMessage) {
+      return apiMessage;
+    }
+
+    if (!error.response) {
+      return "Could not connect to the analysis server. Please make sure the backend is running.";
+    }
+
+    return "Something went wrong while analyzing the image. Please try again.";
+  };
 
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
 
     if (!file) return;
+
+    setUploadError("");
+    setError("");
+    setResult(null);
     
     if (
       file.type !== "image/png" &&
       file.type !== "image/jpeg"
     ) {
-      alert("Only PNG and JPG files allowed");
+      setUploadError(
+        "This file type is not supported. Please choose a PNG or JPG image."
+      );
+      e.target.value = "";
       return;
     }
 
     if (file.size > 10 * 1024 * 1024) {
-      alert("File size must be less than 10MB");
+      setUploadError(
+        "This image is larger than 10MB. Please choose a smaller image."
+      );
+      e.target.value = "";
       return;
     }
 
@@ -40,9 +69,13 @@ const UploadCard = ({
   };
 
   const removeImage = () => {
+    analyzeRequestRef.current += 1;
     setSelectedImage(null);
 
     setResult(null);
+    setError("");
+    setLoading(false);
+    setUploadError("");
 
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
@@ -52,26 +85,48 @@ const UploadCard = ({
   const handleAnalyze = async () => {
     if (!selectedImage) return;
 
+    const requestId =
+      analyzeRequestRef.current + 1;
+    analyzeRequestRef.current = requestId;
+
     try {
       setLoading(true);
+      setError("");
+      setResult(null);
 
       const data =
         await analyzeEmotionAPI(
           selectedImage
         );
 
+      if (
+        requestId !==
+        analyzeRequestRef.current
+      ) {
+        return;
+      }
+
       setResult(data.result);
     } catch (error) {
-      console.log(error);
+      if (
+        requestId !==
+        analyzeRequestRef.current
+      ) {
+        return;
+      }
 
       setResult(null);
 
       setError(
-        error.response?.data?.message ||
-        "Emotion detection failed"
+        getAnalyzeErrorMessage(error)
       );
     } finally {
-      setLoading(false);
+      if (
+        requestId ===
+        analyzeRequestRef.current
+      ) {
+        setLoading(false);
+      }
     }
   };
 
@@ -151,6 +206,19 @@ const UploadCard = ({
           </div>
         )}
       </div>
+
+      {uploadError && (
+        <div className="mt-4 flex items-start gap-3 rounded-2xl border border-amber-400/20 bg-amber-400/10 px-4 py-3">
+          <AlertCircle
+            size={20}
+            className="mt-0.5 shrink-0 text-amber-300"
+          />
+
+          <p className="text-sm leading-relaxed text-amber-100">
+            {uploadError}
+          </p>
+        </div>
+      )}
 
       <button
         onClick={handleAnalyze}

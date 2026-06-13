@@ -1,4 +1,8 @@
-import { Loader2, Smile } from "lucide-react";
+import {
+  AlertTriangle,
+  Loader2,
+  Smile,
+} from "lucide-react";
 
 const ResultCard = ({
   selectedImage,
@@ -70,9 +74,10 @@ const ResultCard = ({
         {!loading && error && (
           <>
             <div className="w-24 h-24 rounded-full bg-red-500/10 flex items-center justify-center mb-6">
-              <span className="text-5xl">
-                ⚠️
-              </span>
+              <AlertTriangle
+                size={44}
+                className="text-red-400"
+              />
             </div>
 
             <h3 className="text-red-400 text-2xl font-semibold mb-3 text-center">
