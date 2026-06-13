@@ -18,13 +18,11 @@ const UploadCard = ({
 
   const fileInputRef = useRef();
 
-  // Handle Image Upload
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
 
     if (!file) return;
-
-    // Validation
+    
     if (
       file.type !== "image/png" &&
       file.type !== "image/jpeg"
@@ -33,7 +31,6 @@ const UploadCard = ({
       return;
     }
 
-    // Max 10MB
     if (file.size > 10 * 1024 * 1024) {
       alert("File size must be less than 10MB");
       return;
@@ -42,10 +39,6 @@ const UploadCard = ({
     setSelectedImage(file);
   };
 
-  // Remove Image
-  // const removeImage = () => {
-  //   setSelectedImage(null);
-  // };
   const removeImage = () => {
     setSelectedImage(null);
 
@@ -56,7 +49,6 @@ const UploadCard = ({
     }
   };
 
-  // backend call
   const handleAnalyze = async () => {
     if (!selectedImage) return;
 
@@ -85,7 +77,6 @@ const UploadCard = ({
 
   return (
     <div className="bg-[#081028] border border-white/10 rounded-3xl p-6 md:p-8">
-      {/* Header */}
       <div className="flex items-center gap-3 mb-6">
         <div className="w-11 h-11 rounded-2xl bg-[#5B8CFF]/20 flex items-center justify-center">
           <UploadCloud className="text-[#5B8CFF]" />
@@ -102,11 +93,9 @@ const UploadCard = ({
         </div>
       </div>
 
-      {/* Upload Area */}
       <div className="border-2 border-dashed border-white/10 rounded-3xl p-6 md:p-8 bg-[#0B122B]">
         {!selectedImage ? (
           <div className="flex flex-col items-center justify-center text-center min-h-[320px]">
-            {/* Icon */}
             <div className="w-20 h-20 rounded-full bg-[#5B8CFF]/10 flex items-center justify-center mb-5">
               <ImageIcon
                 size={34}
@@ -122,7 +111,6 @@ const UploadCard = ({
               PNG, JPG up to 10MB
             </p>
 
-            {/* Hidden Input */}
             <input
               type="file"
               accept="image/png, image/jpeg"
@@ -131,7 +119,6 @@ const UploadCard = ({
               className="hidden"
             />
 
-            {/* Upload Button */}
             <button
               onClick={() =>
                 fileInputRef.current.click()
@@ -143,7 +130,6 @@ const UploadCard = ({
           </div>
         ) : (
           <div className="relative">
-            {/* Remove Button */}
             <button
               onClick={removeImage}
               className="absolute top-4 right-4 z-10 bg-black/60 hover:bg-black text-white p-2 rounded-full transition-all"
@@ -151,7 +137,6 @@ const UploadCard = ({
               <X size={18} />
             </button>
 
-            {/* Preview */}
             <img
               src={URL.createObjectURL(
                 selectedImage
@@ -160,7 +145,6 @@ const UploadCard = ({
               className="w-full h-[320px] object-cover rounded-2xl"
             />
 
-            {/* File Name */}
             <p className="text-gray-400 text-sm mt-4 truncate">
               {selectedImage.name}
             </p>
@@ -168,7 +152,6 @@ const UploadCard = ({
         )}
       </div>
 
-      {/* Analyze Button */}
       <button
         onClick={handleAnalyze}
         disabled={!selectedImage || loading}

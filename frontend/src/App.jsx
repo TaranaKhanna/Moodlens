@@ -3,8 +3,8 @@ import Sidebar from "./components/Sidebar";
 import Navbar from "./components/Navbar";
 import UploadCard from "./components/Uploadcard";
 import ResultCard from "./components/ResultCard";
-import WeeklyTrend from "./components/Weeklytrend";
 import RecentAnalyses from "./components/RecentAnalyses";
+import About from "./components/About";
 
 function App() {
   const [isOpen, setIsOpen] = useState(false);
@@ -17,25 +17,24 @@ function App() {
 
   return (
     <div className="bg-[#020817] min-h-screen overflow-x-hidden">
-      {/* Sidebar */}
       <Sidebar isOpen={isOpen} setIsOpen={setIsOpen} />
 
-      {/* Main */}
-      <main className="lg:ml-[260px]">
+      <main id="dashboard" className="lg:ml-[260px]">
         <Navbar setIsOpen={setIsOpen} />
 
-        <div className="p-4 md:p-8">
+        <div className="px-4 pb-20 pt-8 md:px-8 md:pb-28 md:pt-12">
 
-          {/* Top Section */}
-          <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
-            <UploadCard
-              selectedImage={selectedImage}
-              setSelectedImage={setSelectedImage}
-              loading={loading}
-              setLoading={setLoading}
-              setResult={setResult}
-              setError={setError}
-            />
+          <div className="grid grid-cols-1 xl:grid-cols-2 gap-10 md:gap-14 mt-8">
+            <section id="upload-section" className="scroll-mt-6">
+              <UploadCard
+                selectedImage={selectedImage}
+                setSelectedImage={setSelectedImage}
+                loading={loading}
+                setLoading={setLoading}
+                setResult={setResult}
+                setError={setError}
+              />
+            </section>
             <ResultCard
               selectedImage={selectedImage}
               loading={loading}
@@ -44,10 +43,13 @@ function App() {
             />
           </div>
 
-          {/* bottom section */}
-          <div className="p-4 md:p-8">
+          <section id="history-section" className="mt-14 md:mt-20 scroll-mt-8">
             <RecentAnalyses />
-          </div>
+          </section>
+
+          <section id="about-section" className="mt-14 md:mt-20 scroll-mt-8">
+            <About />
+          </section>
 
         </div>
       </main>
