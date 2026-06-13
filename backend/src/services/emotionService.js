@@ -1,6 +1,9 @@
 import axios from "axios";
 import FormData from "form-data";
 import fs from "fs";
+import {
+  createAnalysisError,
+} from "../utils/analysisErrors.js";
 
 const emotionEmojiMap = {
   happiness: "😊",
@@ -10,6 +13,68 @@ const emotionEmojiMap = {
   neutral: "😐",
   fear: "😨",
   disgust: "🤢",
+};
+
+const classifyFaceApiError = (error) => {
+  if (error?.isAnalysisError) {
+    return error;
+  }
+
+  const status = error.response?.status;
+  const providerMessage =
+    error.response?.data?.error_message ||
+    error.response?.data?.message ||
+    "";
+  const normalizedMessage =
+    providerMessage.toLowerCase();
+
+  if (
+    status === 413 ||
+    normalizedMessage.includes(
+      "invalid_image_size"
+    ) ||
+    normalizedMessage.includes(
+      "image_error_unsupported_format"
+    ) ||
+    normalizedMessage.includes(
+      "image_file_too_large"
+    ) ||
+    normalizedMessage.includes("too large") ||
+    normalizedMessage.includes(
+      "unsupported"
+    ) ||
+    normalizedMessage.includes(
+      "image size"
+    )
+  ) {
+    return createAnalysisError(
+      "UNSUPPORTED_IMAGE",
+      422
+    );
+  }
+
+  if (
+    status === 400 ||
+    normalizedMessage.includes(
+      "invalid image"
+    ) ||
+    normalizedMessage.includes(
+      "bad image"
+    ) ||
+    normalizedMessage.includes(
+      "image_error"
+    )
+  ) {
+    return createAnalysisError(
+      "NO_FACE",
+      422
+    );
+  }
+
+  return createAnalysisError(
+    "ANALYSIS_FAILED",
+    422
+  );
 };
 
 export const detectEmotion = async (
@@ -50,8 +115,16 @@ export const detectEmotion = async (
       !response.data.faces ||
       response.data.faces.length === 0
     ) {
-      throw new Error(
-        "No human face detected in image"
+      throw createAnalysisError(
+        "NO_FACE",
+        422
+      );
+    }
+
+    if (response.data.faces.length > 1) {
+      throw createAnalysisError(
+        "MULTIPLE_FACES",
+        422
       );
     }
 
@@ -83,6 +156,6 @@ export const detectEmotion = async (
       emotions,
     };
   } catch (error) {
-    throw error;
+    throw classifyFaceApiError(error);
   }
 };
