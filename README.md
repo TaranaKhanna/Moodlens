@@ -2,6 +2,12 @@
 
 Moodlens is an AI-powered emotion recognition dashboard that analyzes facial expressions from uploaded images and identifies the dominant emotion. Users can upload an image, view emotion insights instantly, and revisit their recent analyses through a clean and responsive interface.
 
+## 📸 Preview
+<img width="1918" height="881" alt="Screenshot 2026-06-16 131842" src="https://github.com/user-attachments/assets/d06e7baf-fe5c-49db-96ac-8afee50d38a8" />
+
+<img width="1567" height="856" alt="Screenshot 2026-06-16 132130" src="https://github.com/user-attachments/assets/042404bf-bc84-46c0-9936-495c3ce5c048" />
+
+
 ## ✨ Features
 
 * 📤 Upload facial images for analysis
