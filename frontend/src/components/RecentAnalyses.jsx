@@ -32,6 +32,18 @@ const getEmotionColor = (
   }
 };
 
+const getImageSrc = (imageUrl) => {
+  if (!imageUrl) {
+    return "";
+  }
+
+  if (imageUrl.startsWith("http")) {
+    return imageUrl;
+  }
+
+  return `http://localhost:8000${imageUrl}`;
+};
+
 const RecentAnalyses = () => {
   const [analyses, setAnalyses] =
     useState([]);
@@ -101,7 +113,7 @@ const RecentAnalyses = () => {
             >
               <div className="flex items-center gap-4">
                 <img
-                  src={`http://localhost:8000${item.imageUrl}`}
+                  src={getImageSrc(item.imageUrl)}
                   alt={item.emotion}
                   className="w-14 h-14 rounded-2xl object-cover"
                 />
@@ -164,7 +176,7 @@ const RecentAnalyses = () => {
                 >
                   <td className="py-5">
                     <img
-                      src={`http://localhost:8000${item.imageUrl}`}
+                      src={getImageSrc(item.imageUrl)}
                       alt={item.emotion}
                       className="w-14 h-14 rounded-2xl object-cover"
                     />

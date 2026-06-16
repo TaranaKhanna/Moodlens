@@ -7,6 +7,11 @@ const analysisSchema = new mongoose.Schema(
       required: true,
     },
 
+    cloudinaryPublicId: {
+      type: String,
+      default: null,
+    },
+
     emotion: {
       type: String,
       required: true,

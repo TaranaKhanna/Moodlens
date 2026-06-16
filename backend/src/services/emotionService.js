@@ -1,6 +1,5 @@
 import axios from "axios";
 import FormData from "form-data";
-import fs from "fs";
 import {
   createAnalysisError,
 } from "../utils/analysisErrors.js";
@@ -78,7 +77,7 @@ const classifyFaceApiError = (error) => {
 };
 
 export const detectEmotion = async (
-  imagePath
+  file
 ) => {
   try {
     const formData = new FormData();
@@ -100,7 +99,11 @@ export const detectEmotion = async (
 
     formData.append(
       "image_file",
-      fs.createReadStream(imagePath)
+      file.buffer,
+      {
+        filename: file.originalname,
+        contentType: file.mimetype,
+      }
     );
 
     const response = await axios.post(
