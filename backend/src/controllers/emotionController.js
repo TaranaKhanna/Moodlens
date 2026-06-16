@@ -1,13 +1,8 @@
 import { detectEmotion } from "../services/emotionService.js";
 import Analysis from "../models/Analysis.js";
-import {
-  createAnalysisError,
-  getAnalysisErrorResponse,
-} from "../utils/analysisErrors.js";
-import {
-  deleteUploadedFile,
-  pruneOldAnalyses,
-} from "../utils/storageCleanup.js";
+import { createAnalysisError, getAnalysisErrorResponse } from "../utils/analysisErrors.js";
+import { pruneOldAnalyses } from "../utils/storageCleanup.js";
+import { uploadImageToCloudinary } from "../services/cloudinaryService.js";
 
 export const analyzeEmotion = async (
   req,
@@ -29,15 +24,22 @@ export const analyzeEmotion = async (
     }
 
     const result = await detectEmotion(
-      req.file.path
+      req.file
     );
+
+    const uploadedImage =
+      await uploadImageToCloudinary(
+        req.file
+      );
 
     const emotion = result.emotion;
     const confidence = result.confidence;
 
     const savedAnalysis =
       await Analysis.create({
-        imageUrl: `/uploads/${req.file.filename}`,
+        imageUrl: uploadedImage.imageUrl,
+        cloudinaryPublicId:
+          uploadedImage.cloudinaryPublicId,
         emotion,
         confidence,
         emotions: result.emotions,
@@ -58,15 +60,6 @@ export const analyzeEmotion = async (
       analysis: savedAnalysis,
     });
   } catch (error) {
-    try {
-      await deleteUploadedFile(req.file?.path);
-    } catch (cleanupError) {
-      console.error(
-        "Failed to delete failed upload:",
-        cleanupError
-      );
-    }
-
     const errorResponse =
       getAnalysisErrorResponse(error);
 

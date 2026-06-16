@@ -1,1 +1,64 @@
-# Emotion Analysis
+# 🌟 Moodlens
+
+Moodlens is an AI-powered emotion recognition dashboard that analyzes facial expressions from uploaded images and identifies the dominant emotion. Users can upload an image, view emotion insights instantly, and revisit their recent analyses through a clean and responsive interface.
+
+## ✨ Features
+
+* 📤 Upload facial images for analysis
+* 😊 Detect dominant emotions with confidence scores
+* 📊 View emotion probability distribution
+* 📚 Access recent analysis history
+* ☁️ Store images securely using Cloudinary
+* ⚠️ Friendly error handling for unsupported images
+* 📱 Fully responsive dashboard
+
+## 🛠️ Tech Stack
+
+**Frontend:** React (Vite), Tailwind CSS, Axios
+**Backend:** Node.js, Express.js, Multer
+**Database:** MongoDB Atlas
+**Storage:** Cloudinary
+**AI Service:** Face++ Emotion Detection API
+
+## 🚀 Getting Started
+
+### Frontend
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+### Backend
+
+```bash
+cd backend
+npm install
+npm run dev
+```
+
+## 🔑 Environment Variables
+
+Create a `.env` file in the backend:
+
+```env
+PORT=
+MONGO_URI=
+
+FACE_API_KEY=
+FACE_API_SECRET=
+
+CLOUDINARY_CLOUD_NAME=
+CLOUDINARY_API_KEY=
+CLOUDINARY_API_SECRET=
+CLOUDINARY_UPLOAD_FOLDER=
+```
+
+## 👩‍💻 Developed By
+
+Built with curiosity and a passion for AI by:
+
+* Roshni
+* Shweta
+* Tarana

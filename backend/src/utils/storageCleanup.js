@@ -1,36 +1,9 @@
-import fs from "fs/promises";
-import path from "path";
 import Analysis from "../models/Analysis.js";
+import {
+  deleteCloudinaryImage,
+} from "../services/cloudinaryService.js";
 
 const MAX_SUCCESSFUL_ANALYSES = 12;
-const uploadPath = path.resolve("uploads");
-
-const getImagePath = (imageUrl) => {
-  if (!imageUrl) {
-    return null;
-  }
-
-  return path.join(
-    uploadPath,
-    path.basename(imageUrl)
-  );
-};
-
-export const deleteUploadedFile = async (
-  filePath
-) => {
-  if (!filePath) {
-    return;
-  }
-
-  try {
-    await fs.unlink(filePath);
-  } catch (error) {
-    if (error.code !== "ENOENT") {
-      throw error;
-    }
-  }
-};
 
 export const pruneOldAnalyses =
   async () => {
@@ -49,12 +22,12 @@ export const pruneOldAnalyses =
         _id: -1,
       })
       .skip(MAX_SUCCESSFUL_ANALYSES)
-      .select("_id imageUrl")
+      .select("_id cloudinaryPublicId")
       .lean();
 
     for (const analysis of oldAnalyses) {
-      await deleteUploadedFile(
-        getImagePath(analysis.imageUrl)
+      await deleteCloudinaryImage(
+        analysis.cloudinaryPublicId
       );
 
       await Analysis.deleteOne({
