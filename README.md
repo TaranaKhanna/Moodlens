@@ -59,6 +59,6 @@ CLOUDINARY_UPLOAD_FOLDER=
 
 Built with curiosity and a passion for AI by:
 
-* Roshni
-* Shweta
-* Tarana
+* [Roshni](https://github.com/roshni-github-username)
+* [Shweta](https://github.com/shweta-github-username)
+* [Tarana](https://github.com/tarana-github-username)
