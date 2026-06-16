@@ -41,7 +41,7 @@ const getImageSrc = (imageUrl) => {
     return imageUrl;
   }
 
-  return `http://localhost:8000${imageUrl}`;
+  return `${import.meta.env.VITE_API_URL}${imageUrl}`;
 };
 
 const RecentAnalyses = () => {
